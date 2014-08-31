@@ -125,4 +125,37 @@ class ForumController extends BaseController
 			return Redirect::route('forum-home')->with('fail', 'An error occured while deleting the category.');
 		}
 	}
+
+	public function storeCategory($id)
+	{
+		$validator = Validator::make(Input::all(), array(
+			'category_name' => 'required|unique:forum_categories,title'
+		));
+		if ($validator->fails())
+		{
+			return Redirect::route('forum-home')->withInput()->withErrors($validator)->with('category-modal', '#category_modal')->with('group-id', $id);
+		}
+		else
+		{
+			$group = ForumGroup::find($id);
+			if ($group == null)
+			{
+				return Redirect::route('forum-home')->with('fail', "That group doesn't exist.");
+			}
+
+			$category = new ForumCategory;
+			$category->title = Input::get('category_name');
+			$category->author_id = Auth::user()->id;
+			$category->group_id = $id;
+
+			if($category->save())
+			{
+				return Redirect::route('forum-home')->with('success', 'The category was created');
+			}
+			else
+			{
+				return Redirect::route('forum-home')->with('fail', 'An error occured while saving the new category.');
+			}
+		}
+	}
 }

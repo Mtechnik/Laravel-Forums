@@ -26,6 +26,7 @@ Route::group(array('prefix' => '/forum'), function()
 
 		Route::group(array('before' => 'csrf'), function()
 		{
+			Route::post('/category/{id}/new', array('uses' => 'ForumController@storeCategory', 'as' => 'forum-store-category'));
 			Route::post('/group', array('uses' => 'ForumController@storeGroup', 'as' => 'forum-store-group'));
 		});
 	});
