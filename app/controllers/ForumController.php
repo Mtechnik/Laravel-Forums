@@ -17,13 +17,21 @@ class ForumController extends BaseController
 		{
 			return Redirect::route('forum-home')->with('fail', "That category doesn't exist.");
 		}
-		$threads = $category->threads();
+		$threads = $category->threads()->get();
+
 		return View::make('forum.category')->with('category', $category)->with('threads', $threads);
 	}
 
 	public function thread($id)
 	{
-		
+		$thread = ForumThread::find($id);
+		if ($thread == null)
+		{
+			return Redirect::route('forum-home')->with('fail', "That thread doesn't exist.");
+		}
+		$author = $thread->author()->first()->username;
+
+		return View::make('forum.thread')->with('thread', $thread)->with('author', $author);
 	}
 
 	public function storeGroup()
@@ -181,7 +189,7 @@ class ForumController extends BaseController
 		}
 		else
 		{
-			$thread = new Thread;
+			$thread = new ForumThread;
 			$thread->title = Input::get('title');
 			$thread->body = Input::get('body');
 			$thread->category_id = $id;

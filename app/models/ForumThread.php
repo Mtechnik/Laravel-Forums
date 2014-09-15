@@ -4,7 +4,7 @@ class ForumThread extends Eloquent
 {
 	protected $table = 'forum_threads';
 
-		public function group()
+	public function group()
 	{
 		$this->belongsTo('ForumGroup');
 	}
@@ -17,5 +17,10 @@ class ForumThread extends Eloquent
 	public function comments()
 	{
 		return $this->hasMany('ForumComment', 'thread_id');
+	}
+
+	public function author()
+	{
+		return $this->belongsTo('User', 'author_id');
 	}
 }
