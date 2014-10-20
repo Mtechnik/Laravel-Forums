@@ -6,12 +6,12 @@ class ForumThread extends Eloquent
 
 	public function group()
 	{
-		$this->belongsTo('ForumGroup');
+		return $this->belongsTo('ForumGroup');
 	}
 
 	public function category()
 	{
-		$this->belongsTo('ForumCategory');
+		return $this->belongsTo('ForumCategory', 'category_id');
 	}
 
 	public function comments()

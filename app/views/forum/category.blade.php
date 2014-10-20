@@ -7,6 +7,11 @@
 
 @section('content')
 
+<ol class="breadcrumb">
+	<li><a href="{{ URL::route('forum-home') }}">Forums</a></li>
+	<li class="active">{{ $category->title }}</li>
+</ol>
+
 @if(Auth::check())
 	<a href="{{ URL::route('forum-get-new-thread', $category->id) }}" class="btn btn-default">Add Thread!</a>
 @endif
