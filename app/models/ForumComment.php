@@ -6,16 +6,21 @@ class ForumComment extends Eloquent
 
 	public function group()
 	{
-		$this->belongsTo('ForumGroup');
+		return $this->belongsTo('ForumGroup');
 	}
 
 	public function category()
 	{
-		$this->belongsTo('ForumCategory');
+		return $this->belongsTo('ForumCategory');
 	}
 
 	public function thread()
 	{
-		$this->belongsTo('ForumThread');
+		return $this->belongsTo('ForumThread');
+	}
+
+	public function author()
+	{
+		return $this->belongsTo('User');
 	}
 }

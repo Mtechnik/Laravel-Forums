@@ -230,4 +230,45 @@ class ForumController extends BaseController
 				return Redirect::route('forum-category', $category_id)->with('fail', "An error occured while deleting the thread.");
 		}
 	}
+
+	public function storeComment($id)
+	{
+		$thread = ForumThread::find($id);
+		if ($thread == null)
+			Redirect::route('forum')->with('fail', "That thread does not exist.");
+
+		$validator = Validator::make(Input::all(), array(
+			'body' => 'required|min:5'
+		));
+
+		if ($validator->fails())
+			return Redirect::route('forum-thread', $id)->withInput()->withErrors($validator)->with('fail', "Please fill in the form correctly.");
+		else
+		{
+			$comment = new ForumComment();
+			$comment->body = Input::get('body');
+			$comment->author_id = Auth::user()->id;
+			$comment->thread_id = $id;
+			$comment->category_id = $thread->category->id;
+			$comment->group_id = $thread->group->id;
+
+			if ($comment->save())
+				return Redirect::route('forum-thread', $id)->with('success', "The comment was saved.");
+			else
+				return Redirect::route('forum-thread', $id)->with('fail', "An error occured wile saving.");
+		}
+	}
+
+	public function deleteComment($id)
+	{
+		$comment = ForumComment::find($id);
+		if ($comment == null)
+			return Redirect::route('forum')->with('fail', "That comment does not exist.");
+
+		$threadid = $comment->thread->id;
+		if ($comment->delete())
+			return Redirect::route('forum-thread', $threadid)->with('success', "The comment was deleted.");
+		else
+			return Redirect::route('forum-thread', $threadid)->with('fail', "An error occured while deleting the comment.");
+	}
 }
